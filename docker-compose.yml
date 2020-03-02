@@ -1,0 +1,46 @@
+version: '3.5'
+
+services:
+  nginx:
+    restart: always
+    image: nginx
+    ports:
+     - "80:80"
+    container_name:nginx
+    volumes:
+     - /var/www/html:/var/www/html
+     - /etc/nginx/conf.d:/etc/nginx/conf.d
+     - /var/log:/var/log
+    links:
+     - php7:php7
+    environment:
+      LANG: c.UTF-8
+      TZ: Asia/Taipei
+  php7:
+    restart: always
+    build: ./php7
+    expose:
+     - "9000"
+    container_name:php7
+    volumes:
+     - /usr/local/etc/php:/usr/local/etc/php
+     - /var/www/html:/var/www/html
+    links:
+     - mysql:mysql
+    environment:
+      LANG: C.UTF-8
+      TZ: Asia/Taipei
+  mysql:
+    restart: always
+    image: mysql:5.7
+    ports:
+     - "3306:3306"
+    container_name:mysql
+    volumes:
+     - /etc/mysql:/etc/mysql
+     - /var/lib/mysql:/var/lib/mysql
+     - /var/log/mysql:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
+      LANG: c.UTF-8
+      TZ: Asia/Taipei
