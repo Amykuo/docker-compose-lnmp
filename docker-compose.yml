@@ -2,17 +2,18 @@ version: '3.5'
 
 services:
   memcached:
-    restart:always
+    restart: always
     image: memcached:latest
     ports:
       - "11211:11211"
-    container_name:memcached
+    container_name: memcached
   nginx:
     restart: always
-    image: nginx
+    build: ./nginx
+    #image: nginx
     ports:
      - "80:80"
-    container_name:nginx
+    container_name: nginx
     volumes:
      - /var/www/html:/var/www/html
      - /etc/nginx/conf.d:/etc/nginx/conf.d
@@ -27,9 +28,9 @@ services:
     build: ./php7
     expose:
      - "9000"
-    container_name:php7
+    container_name: php7
     volumes:
-     - /usr/local/etc/php:/usr/local/etc/php
+     #- /usr/local/etc/php:/usr/local/etc/php
      - /var/www/html:/var/www/html
     links:
      - mysql:mysql
@@ -38,12 +39,13 @@ services:
       TZ: Asia/Taipei
   mysql:
     restart: always
-    image: mysql:5.7
+    build: ./mysql57
+    #image: mysql:5.7
     ports:
      - "3306:3306"
-    container_name:mysql
+    container_name: mysql
     volumes:
-     - /etc/mysql:/etc/mysql
+     - /etc/mysql/conf.d/mycustom.cnf:/etc/mysql/conf.d/custom.cnf
      - /var/lib/mysql:/var/lib/mysql
      - /var/log/mysql:/var/log/mysql
     environment:
